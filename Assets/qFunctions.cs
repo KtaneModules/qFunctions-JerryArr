@@ -589,13 +589,16 @@ public class qFunctions : MonoBehaviour
                 break;
             case 17:
                 var numLetters = 0;
-                if (!(Bomb.GetSerialNumber().Substring(0, 1) == "1" || Bomb.GetSerialNumber().Substring(0, 1) == "2" ||
-                        Bomb.GetSerialNumber().Substring(0, 1) == "3" || Bomb.GetSerialNumber().Substring(0, 1) == "4" ||
-                        Bomb.GetSerialNumber().Substring(0, 1) == "5" || Bomb.GetSerialNumber().Substring(0, 1) == "6" ||
-                        Bomb.GetSerialNumber().Substring(0, 1) == "7" || Bomb.GetSerialNumber().Substring(0, 1) == "8" ||
-                        Bomb.GetSerialNumber().Substring(0, 1) == "9" || Bomb.GetSerialNumber().Substring(0, 1) == "0"))
+                for (int i = 0; i < 6; i++)
                 {
-                    numLetters++;
+                    if (!(Bomb.GetSerialNumber().Substring(i, 1) == "1" || Bomb.GetSerialNumber().Substring(i, 1) == "2" ||
+                        Bomb.GetSerialNumber().Substring(i, 1) == "3" || Bomb.GetSerialNumber().Substring(i, 1) == "4" ||
+                        Bomb.GetSerialNumber().Substring(i, 1) == "5" || Bomb.GetSerialNumber().Substring(i, 1) == "6" ||
+                        Bomb.GetSerialNumber().Substring(i, 1) == "7" || Bomb.GetSerialNumber().Substring(i, 1) == "8" ||
+                        Bomb.GetSerialNumber().Substring(i, 1) == "9" || Bomb.GetSerialNumber().Substring(i, 1) == "0"))
+                    {
+                        numLetters++;
+                    }
                 }
                 if (numLetters == 3)
                 {
@@ -644,13 +647,16 @@ public class qFunctions : MonoBehaviour
                 break;
             case 24:
                 var numNumbers = 0;
-                if (Bomb.GetSerialNumber().Substring(0, 1) == "1" || Bomb.GetSerialNumber().Substring(0, 1) == "2" ||
-                Bomb.GetSerialNumber().Substring(0, 1) == "3" || Bomb.GetSerialNumber().Substring(0, 1) == "4" ||
-                Bomb.GetSerialNumber().Substring(0, 1) == "5" || Bomb.GetSerialNumber().Substring(0, 1) == "6" ||
-                Bomb.GetSerialNumber().Substring(0, 1) == "7" || Bomb.GetSerialNumber().Substring(0, 1) == "8" ||
-                Bomb.GetSerialNumber().Substring(0, 1) == "9" || Bomb.GetSerialNumber().Substring(0, 1) == "0")
+                for (int i = 0; i < 6; i++)
                 {
-                    numNumbers++;
+                        if (Bomb.GetSerialNumber().Substring(i, 1) == "1" || Bomb.GetSerialNumber().Substring(i, 1) == "2" ||
+                    Bomb.GetSerialNumber().Substring(i, 1) == "3" || Bomb.GetSerialNumber().Substring(i, 1) == "4" ||
+                    Bomb.GetSerialNumber().Substring(i, 1) == "5" || Bomb.GetSerialNumber().Substring(i, 1) == "6" ||
+                    Bomb.GetSerialNumber().Substring(i, 1) == "7" || Bomb.GetSerialNumber().Substring(i, 1) == "8" ||
+                    Bomb.GetSerialNumber().Substring(i, 1) == "9" || Bomb.GetSerialNumber().Substring(i, 1) == "0")
+                    {
+                        numNumbers++;
+                    }
                 }
                 if (numNumbers > 3)
                 {
