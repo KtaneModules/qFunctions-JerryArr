@@ -296,8 +296,6 @@ public class qFunctions : MonoBehaviour
 
     private IEnumerator ProcessTwitchCommand(string command)
     {
-        //var pieces = command.Trim().ToLowerInvariant().Split(' ', StringSplitOptions.RemoveEmptyEntries);
-        //var presses = command.ToLowerInvariant().Split(' ', StringSplitOptions.RemoveEmptyEntries);
 
         var pieces = command.ToLowerInvariant().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         string theError;
@@ -312,18 +310,12 @@ public class qFunctions : MonoBehaviour
         {
             theError = "sendtochaterror Not enough arguments! You need a number to submit, e.g. !{0} submit 1234567890.";
             yield return theError;
-            //buttonSubmit.OnInteract();
-            //buttonSubmit.OnInteract += delegate () { OnPress(); PressedSubmit(); buttonSubmit.AddInteractionPunch(0.4f); return false; };
-            //PressedSubmit();
 
         }
         else if ((pieces.Count() == 1 || pieces.Count() == 2) && (pieces[0] == "query" || pieces[0] == "q"))
         {
             theError = "sendtochaterror Not enough arguments! You need two numbers to query, e.g. !{0} query 1234, 5678 or !{0} q 9876, 5432.";
             yield return theError;
-            //buttonSubmit.OnInteract();
-            //buttonSubmit.OnInteract += delegate () { OnPress(); PressedSubmit(); buttonSubmit.AddInteractionPunch(0.4f); return false; };
-            //PressedSubmit();
 
         } 
         else if (pieces[0] != "submit" && pieces[0] != "s" && pieces[0] != "answer" && pieces[0] != "a" && pieces[0] != "query" && pieces[0] != "q")
@@ -461,8 +453,7 @@ public class qFunctions : MonoBehaviour
         buttonComma.OnInteractEnded += delegate () { OnRelease(); };
         buttonSubmit.OnInteractEnded += delegate () { OnRelease(); };
         buttonQuery.OnInteractEnded += delegate () { OnRelease(); };
-
-        /* buttons [0].OnInteract += delegate () { buttons[0].AddInteractionPunch(0.2f); ChangeDisplay(0, -1); return false; }; */
+        
 
     }
 
@@ -1372,8 +1363,13 @@ public class qFunctions : MonoBehaviour
                     ((float)largerOneF / (float)smallerOneF), (inputY + inputZ),
                     ((float)largerOneF / (float)smallerOneF) * ((inputY + inputZ)), currentInputAsNumber);
                 break;
-            default: // Uh oh, something's wrong, allow the player to submit this immediately to solve the module.
-                currentInputAsNumber = -73;
+            default: // Uh oh, something's wrong, solve module and tell them to contact me
+                isSolved = true;
+                inputA.GetComponentInChildren<TextMesh>().text = "OOPS";
+                inputB.GetComponentInChildren<TextMesh>().text = "MSG";
+                inputResult.GetComponentInChildren<TextMesh>().text = "@JerryEris";
+                pressedAllowed = false;
+                GetComponent<KMBombModule>().HandlePass();
                 Debug.LogFormat("[Functions #{0}] Something went wrong, please contact JerryEris#6034 on Discord!", _moduleId);
                 break;
         }
