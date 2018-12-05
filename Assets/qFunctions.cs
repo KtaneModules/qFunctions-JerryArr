@@ -76,7 +76,7 @@ public class qFunctions : MonoBehaviour
     bool pressedAllowed = false;
 
     // TWITCH PLAYS SUPPORT
-    int tpStages;
+    //int tpStages; This one is not needed for this module
     // TWITCH PLAYS SUPPORT
 
     int numberA = -1;
@@ -109,7 +109,6 @@ public class qFunctions : MonoBehaviour
 
         delegationZone();
         Module.OnActivate += delegate { inputResult.GetComponentInChildren<TextMesh>().text = ""; };
-        //TextMesh dispText = meshNumberA.GetComponentInChildren<TextMesh>();
         pickedLetter = UnityEngine.Random.Range(0, 26);
         pickedFunction = UnityEngine.Random.Range(0, 42);
         if (UnityEngine.Random.Range(0, 10) < 7)
@@ -150,8 +149,6 @@ public class qFunctions : MonoBehaviour
         }
         Debug.LogFormat("[Functions #{0}] Display is {1} {2} {3}.", _moduleId, numberA, alphabet[pickedLetter], numberB);
         Debug.LogFormat("[Functions #{0}] Query Function is #{1}: {2}.", _moduleId, pickedFunction, theFunctions[pickedFunction]);
-        /* Debug.LogFormat("[Functions #{0}] Final Function is {1} adjusted by {5} due to {2} being {6} meaning {3}, becoming {4}. Solution below.", _moduleId, pickedFunction,
-            alphabet[pickedLetter] , theRules[pickedLetter, letterRuleOn], finalFunction, ruleNumber[pickedLetter, letterRuleOn], letterRuleOn == 0 ? "true" : "false"); */
         Debug.LogFormat("[Functions #{0}] {1}, meaning rule {2} is {3}, so adjust {4} by {5}, so the Final Function is number {6}, solution below.", _moduleId,
         theRules[pickedLetter, letterRuleOn], alphabet[pickedLetter], letterRuleOn == 0 ? "true" : "false", pickedFunction, ruleNumber[pickedLetter, letterRuleOn],
         finalFunction);
