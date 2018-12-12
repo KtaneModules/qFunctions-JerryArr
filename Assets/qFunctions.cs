@@ -69,7 +69,7 @@ public class qFunctions : MonoBehaviour
     {
         { 6, -4 },        { 2, -3 },        { 5, -4 },        { 8, -8 },        { 6, -2 },        { 6, -5 },
         { 1, -5 },        { 1, -3 },        { 1, 5 },        { 5, -3 },        { 4, -1 },        { 6, 7 },
-        { 3, -7 },        { 3, -5 },        { 6, -1 },        { 2, 3 },        { 1, -3 },        { 3, -2 },
+        { 3, -7 },        { 3, -5 },        { 6, -1 },        { 2, -3 },        { 1, -3 },        { 3, -2 },
         { 2, 4 },         { 4, 1 },        { 2, -2 },        { 7, 1 },        { 3, -5 },        { 3, -3 },
         { 4, -1 },        { 5, -1 }
     };
@@ -84,6 +84,7 @@ public class qFunctions : MonoBehaviour
     int pickedLetter = -1;
     int pickedFunction = -1;
     int finalFunction = -1;
+    int firstLastDigit = -1;
 
     int letterRuleOn = -1; // 0 is true, 1 is false, because I said so this time
 
@@ -240,6 +241,10 @@ public class qFunctions : MonoBehaviour
                 currentInputAsNumber = inputNumberA + inputNumberB;
                 functionZone(pickedFunction, inputNumberA, inputNumberB);
                 inputResult.GetComponentInChildren<TextMesh>().text = "" + currentInputAsNumber;
+                if (firstLastDigit == -1)
+                {
+                    firstLastDigit = (int)currentInputAsNumber % 10;
+                }
                 currentInputAsNumber = 0;
                 currentInput = "";
                 justQueried = true;
