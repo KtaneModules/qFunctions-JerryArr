@@ -30,22 +30,35 @@ public class qFunctions : MonoBehaviour
     public KMSelectable buttonClear;
     public KMSelectable buttonSubmit;
 
+    public KMRuleSeedable RuleSeedable;
+
     string[] alphabet = new string[26]
     { "A", "B", "C", "D", "E", "F", "G", "H", "I", "J", "K", "L", "M",
       "N", "O", "P", "Q", "R", "S", "T", "U", "V", "W", "X", "Y", "Z"};
 
-    string[] theFunctions = new string[42]
+    int[] theNumbers = new int[60] { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+                        25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
+        //RULESEED NUMBERS BELOW
+        42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59 };
+
+    string[] theFunctions = new string[60]
     {
-        "Digital root of ((a+b) squared)", "a*b, even-position digits removed", "8, then number of odd digits, then number of even digits", "Digital root of (a+b)",
-        "(a+b) modulo 1000", "(a+b) squared", "Highest digit", "Number of different digits missing", "(Larger*2) - Smaller", "Sum of times each digit appears in serial number",
-        "Number of even numbers", "Dots found in digits when using morse code", "a+b, then |a-b|.", "Integer of (Larger / smaller) modulo 1000", "Digital root of |a-b|",
-     "Lit indicators times 63", "a*b", "(a*b) modulo 1000", "(sum of a's digits) * (sum of b's digits)", "Smaller - (Larger modulo smaller)",
-     "a*b, odd-position digits removed", "All digits missing from 1 to 0", "Lunar Addition", "a*b, odd digits removed",
-     "Digit, then 2 if even and 1 if odd, for all digits in order", "sqrt(a) + sqrt(b)", "Digital root of (a*b)", "Digits times 202",
-     "808", "810 - (Number of numbers below 100)", "Larger modulo smaller", "Sum of letters in each digit",
-     "(Product of first and last digit of a) * (Product of first and last digit of b)", "sqrt(a+b)", "Product of first and last digits Variables are", "a^2 + b^2",
-     "(a+b) modulo 12", "|a-b|", "(Digit, then number of that digit) for all digits in order", "a+b", "Larger divided by smaller",
-     "(a+b) times (Larger divided by smaller)"
+"Digital root of ((a + b) squared)", "a times b, even-position digits removed", "8 concatenated with the number of odd digits, concatenated with the number of even digits", "Digital root of (a + b)",
+        "(a + b) modulo 1000", "(a + b) squared", "Highest digit", "Number of different digits missing", "(Larger times 2) minus Smaller", "Sum of times each digit appears in bomb serial number",
+        "Number of even numbers", "Dots found in digits when using morse code", "a + b, concatenated with |a minus b|.", "Integer of (Larger divided by Smaller)) modulo 1000", "Digital root of |a minus b|",
+     "Lit indicators times 63", "a times b", "(a times b) modulo 1000", "(sum of digits in a) times (sum of digits in b)", "Smaller minus (Larger modulo Smaller)",
+     "a times b, odd-position digits removed", "All digits missing concatenated from 1 to 0", "Lunar Addition", "a times b, odd digits removed",
+     "(Digit concatenated with 2 if even and 1 if odd) for all digits in order", "sqrt(a) + sqrt(b)", "Digital root of (a times b)", "Digits in a and b times 202",
+     "808", "810 minus (Number of numbers below 100)", "Larger modulo Smaller", "Sum of letters in each digit",
+     "(Product of first and last digit of a) times (Product of first and last digit of b)", "sqrt(a + b)", "Product of first and last digits overall", "(a squared) + (b squared)",
+     "(a + b) modulo 12", "|a minus b|", "(Digit concatenated with the number of times that digit appears) for all digits in order", "a + b", "Larger divided by Smaller",
+     "(a + b) times (Larger divided by Smaller)",
+     // RULESEED FUNCTIONS BELOW
+        "(a times 10) + b", "Dashes found in digits when using morse code", "a concatenated with b, even-position digits removed", "Sum of digits in bomb serial number",
+        "(a squared) * (b squared)", "| (a squared) minus (b squared) |", "(a squared) + b", "a + (b squared)", "(a times b) modulo 73", "(a modulo 50) + b",
+        "((a modulo 4) + 2) to the power of ((b modulo 4) + 2)", "808 modulo (a + b)", "|a minus b| modulo 1000", "(a + b) times (a minus b)", "(a + b) times Larger", "(a + b) times Smaller",
+        "(a + b) * b", "(a + b) * a"
+
     };
 
     string[,] theRules = new string[26, 2]
@@ -64,6 +77,12 @@ public class qFunctions : MonoBehaviour
         { "At least three ports", "Two or fewer ports" },        { "No indicators", "At least one indicator" },
         { "At least 4 SN digits", "3 or fewer SN digits" },        { "No ports", "At least one port" }
     };
+
+    int[] rsFunctionNum = new int[42];
+
+    int[] rsRuleNum = new int[26];
+
+    int[,] rsRuleOffset = new int[26, 2];
 
     int[,] ruleNumber = new int[26, 2]
     {
@@ -97,21 +116,80 @@ public class qFunctions : MonoBehaviour
     bool commaIn = false;
     bool justQueried = false;
     bool isSolved = false;
-
+    
     void Start()
     {
         _moduleId = _moduleIdCounter++;
+
         Init();
         pressedAllowed = true;
     }
 
     void Init()
     {
+        /*
+         *     int[] rsFunctionNum = new int[42];
+
+    int[] rsRuleNum = new int[26];
+
+    int[,] rsRuleOffset = new int[26, 2];
+    */
+
+        
+        for (int i = 0; i < 42; i++)
+            {
+                rsFunctionNum[i] = i;
+            }
+        for (int i = 0; i < 26; i++)
+        {
+            rsRuleNum[i] = i;
+            rsRuleOffset[i, 0] = ruleNumber[i, 0];
+            rsRuleOffset[i, 1] = ruleNumber[i, 1];
+        }
+        var rnd = RuleSeedable.GetRNG();
+        if (rnd.Seed != 1)
+        {
+            var letterRuleHit = 0;
+            var letterRuleMiss = 0;
+            rnd.ShuffleFisherYates(theNumbers);
+            Debug.LogFormat("[Functions #{0}] Using rule seed: {1}.", _moduleId, rnd.Seed);
+            
+            for (int i = 0; i < 42; i++)
+            {
+                rsFunctionNum[i] = theNumbers[i];
+                /*if (i != 90)
+                {
+                    Debug.Log("Function " + i + " is " + theFunctions[rsFunctionNum[i]] + ", " + rsFunctionNum[i]);
+                }*/
+            }
+            for (int i = 0; i < 26; i++)
+            {
+                letterRuleHit = rnd.Next(1, 10);
+                letterRuleMiss = rnd.Next(1, 10);
+                if (letterRuleMiss == letterRuleHit || rnd.Next(0, 4) != 0)
+                {
+                    letterRuleMiss = letterRuleMiss * -1;
+                }
+                rsRuleOffset[i, 0] = letterRuleHit;
+                rsRuleOffset[i, 1] = letterRuleMiss;
+               /* if (i == 0)
+                {
+                    Debug.Log("Rule A is " + rsRuleOffset[0, 0] + " / " + rsRuleOffset[0, 1]);
+                }*/
+            }
+
+        }
+        /*for (var i = 0; i < 42; i++)
+        {
+            list[i].innerText = theFunctions[theNumbers[i]];
+            //document.getElementsByClassName('listData')[i].innerText = theFunctions[theNumbers[i]];
+        }*/
 
         delegationZone();
         Module.OnActivate += delegate { inputResult.GetComponentInChildren<TextMesh>().text = ""; };
         pickedLetter = UnityEngine.Random.Range(0, 26);
         pickedFunction = UnityEngine.Random.Range(0, 42);
+        //pickedFunction = 26;
         if (UnityEngine.Random.Range(0, 10) < 7)
         {
             numberA = UnityEngine.Random.Range(1, 100);
@@ -139,7 +217,7 @@ public class qFunctions : MonoBehaviour
         doClear();
         letterRuleOn = UnityEngine.Random.Range(0, 2);
         doesRuleApply();
-        finalFunction = pickedFunction + ruleNumber[pickedLetter, letterRuleOn];
+        finalFunction = pickedFunction + rsRuleOffset[pickedLetter, letterRuleOn];
         if (finalFunction > 41)
         {
             finalFunction = finalFunction - 42;
@@ -149,11 +227,14 @@ public class qFunctions : MonoBehaviour
             finalFunction = finalFunction + 42;
         }
         Debug.LogFormat("[Functions #{0}] Display is {1} {2} {3}.", _moduleId, numberA, alphabet[pickedLetter], numberB);
-        Debug.LogFormat("[Functions #{0}] Query Function is #{1}: {2}.", _moduleId, pickedFunction, theFunctions[pickedFunction]);
+        Debug.LogFormat("[Functions #{0}] Query Function is #{1}: {2}.", _moduleId, pickedFunction, theFunctions[rsFunctionNum[pickedFunction]]);
         Debug.LogFormat("[Functions #{0}] {1}, meaning rule {2} is {3}, so adjust {4} by {5}, so the Final Function is number {6}, solution below.", _moduleId,
-        theRules[pickedLetter, letterRuleOn], alphabet[pickedLetter], letterRuleOn == 0 ? "true" : "false", pickedFunction, ruleNumber[pickedLetter, letterRuleOn],
+        theRules[pickedLetter, letterRuleOn], alphabet[pickedLetter], letterRuleOn == 0 ? "true" : "false", pickedFunction, rsRuleOffset[pickedLetter, letterRuleOn],
         finalFunction);
-        functionZone(finalFunction, numberA, numberB);
+        moduleSolution = -1;
+        //Debug.Log("The number from 0-41 that was picked for the query function was " + pickedFunction);
+        //Debug.Log("The number from 0-41 that was picked for the final function was " + finalFunction);
+        functionZone(rsFunctionNum[finalFunction], numberA, numberB);
         moduleSolution = currentInputAsNumber;
         currentInputAsNumber = -1;
         currentInput = "";
@@ -239,7 +320,7 @@ public class qFunctions : MonoBehaviour
             {
                 inputB.GetComponentInChildren<TextMesh>().text = "" + inputNumberB;
                 currentInputAsNumber = inputNumberA + inputNumberB;
-                functionZone(pickedFunction, inputNumberA, inputNumberB);
+                functionZone(rsFunctionNum[pickedFunction], inputNumberA, inputNumberB);
                 inputResult.GetComponentInChildren<TextMesh>().text = "" + currentInputAsNumber;
                 if (firstLastDigit == -1)
                 {
@@ -260,7 +341,7 @@ public class qFunctions : MonoBehaviour
             if (Int64.Parse(currentInput) == moduleSolution)
             {
                 Debug.LogFormat("[Functions #{0}] Submitted input of {1} and the expected {2} match, module disarmed!", _moduleId, Int64.Parse(currentInput), moduleSolution);
-                var winMessage = new string[10] { "BOOYAH!", "--DISARMED--", "YES! YES!", "NAILED IT!", "WOO!", "CHA-CHING!", "GOT IT!", "GENIUS!", "CHECK FMN?", "YOU DID IT!" };
+                var winMessage = new string[10] { "BOOYAH!", "--DISARMED--", "YES! YES!", "NAILED IT!", "WOO!", "CHA-CHING!", "GOT IT!", "GENIUS!", "WELL DONE!", "YOU DID IT!" };
                 isSolved = true;
                 inputResult.GetComponentInChildren<TextMesh>().text = winMessage[UnityEngine.Random.Range(0, 10)];
                 pressedAllowed = false;
@@ -311,6 +392,58 @@ public class qFunctions : MonoBehaviour
         else if (pieces.Count() == 1 && (pieces[0] == "submit" || pieces[0] == "answer" || pieces[0] == "s" || pieces[0] == "a"))
         {
             theError = "sendtochaterror Not enough arguments! You need a number to submit, e.g. !{0} submit 1234567890.";
+            yield return theError;
+
+        }
+        else if (pieces.Count() == 1 && (pieces[0] == "surpriseme" || pieces[0] == "mystery" || pieces[0] == "surprise" || pieces[0] == "doyourworst" || pieces[0] == "random"))
+        {
+            int surpriseA;
+            int surpriseB;
+            if (UnityEngine.Random.Range(0, 10) < 7)
+            {
+                surpriseA = UnityEngine.Random.Range(1, 100);
+            }
+            else
+            {
+                surpriseA = UnityEngine.Random.Range(1, 1000);
+            }
+
+            surpriseB = surpriseA;
+            while (surpriseB == surpriseA)
+            {
+                if (UnityEngine.Random.Range(0, 10) < 7)
+                {
+                    surpriseB = UnityEngine.Random.Range(1, 100);
+                }
+                else
+                {
+                    surpriseB = UnityEngine.Random.Range(1, 1000);
+                }
+            }
+            yield return new WaitForSeconds(.1f);
+            yield return null;
+            buttonClear.OnInteract();
+            for (int l = 0; l < (""+ surpriseA).Length; l++)
+            {
+                var curDigit = Int16.Parse((""+ surpriseA).Substring(l, 1));
+                yield return new WaitForSeconds(.1f);
+                yield return null;
+                buttons[curDigit].OnInteract();
+            }
+            yield return new WaitForSeconds(.1f);
+            yield return null;
+            buttonComma.OnInteract();
+            for (int l = 0; l < (""+surpriseB).Length; l++)
+            {
+                var curDigit = Int16.Parse((""+surpriseB).Substring(l, 1));
+                yield return new WaitForSeconds(.1f);
+                yield return null;
+                buttons[curDigit].OnInteract();
+            }
+            yield return new WaitForSeconds(.1f);
+            yield return null;
+            buttonQuery.OnInteract();
+            theError = "sendtochat You just got SURPRISED!";
             yield return theError;
 
         }
@@ -458,7 +591,54 @@ public class qFunctions : MonoBehaviour
         
 
     }
+    /*
+    public static class Extensions
+    {
+        // Fisher-Yates Shuffle
+        public static IList<T> shuffle<T>(this IList<T> list, MonoRandom rnd)
+        {
+            var i = list.Count;
+            while (i > 1)
+            {
+                var index = rnd.Next(i);
+                i--;
+                var value = list[index];
+                list[index] = list[i];
+                list[i] = value;
+            }
 
+            return list;
+        }
+    } */
+    /*
+    void doShuffle()
+    {
+        var rnd = RuleSeedable.GetRNG();
+        if (rnd.Seed == 1)
+        {
+
+        }
+        else
+        {
+            
+            var numberCount = theNumbers.Length;
+            while (numberCount > 1)
+            {
+                var xyz = rnd.Next(numberCount);
+                numberCount--;
+                var value = theNumbers[xyz];
+                theNumbers[xyz] = theNumbers[numberCount];
+                theNumbers[numberCount] = value;
+            }
+            var theThingy = "";
+
+            for (var i = 0; i < 42; i++)
+            {
+                //list[i].innerText = theFunctions[theNumbers[i]];
+            }
+        }
+        
+    } */
 
     void doesRuleApply()
     {
@@ -682,12 +862,22 @@ public class qFunctions : MonoBehaviour
 
     void functionZone(int fNum, int inputY, int inputZ)
     {
+        var toPrepend = "";
+        if (moduleSolution == -1)
+        {
+            toPrepend = "Final ";
+        }
+        else
+        {
+            toPrepend = "Query ";
+        }
         var wackyString = "";
+        //fNum = 52;
         switch (fNum)
         {
             case 0: // Digital root of ((a+b) squared)
                 currentInputAsNumber = (inputY + inputZ) * (inputY + inputZ);
-                currentInput = "Function: Digital root of ((a+b) squared). ((" + inputY + "+" + inputZ + ") squared) is " + currentInputAsNumber + ".";
+                currentInput = toPrepend + "Function: Digital root of ((a+b) squared). ((" + inputY + "+" + inputZ + ") squared) is " + currentInputAsNumber + ".";
                 while (currentInputAsNumber > 9)
                 {
                     wackyString = "" + currentInputAsNumber;
@@ -702,7 +892,7 @@ public class qFunctions : MonoBehaviour
                 break;
             case 1: // a*b, digits in even positions removed
                 currentInputAsNumber = (inputY * inputZ);
-                currentInput = "Function: a*b, digits in even positions removed. " + inputY + "*" + inputZ + " is " + currentInputAsNumber + ".";
+                currentInput = toPrepend + "Function: a*b, digits in even positions removed. " + inputY + "*" + inputZ + " is " + currentInputAsNumber + ".";
                 wackyString = "";
                 for (int i = 0; i < ("" + currentInputAsNumber).Length; i++)
                 {
@@ -717,7 +907,7 @@ public class qFunctions : MonoBehaviour
 
                 break;
             case 2: //8 ccw # odd digits ccw with # even digits
-                currentInput = "Function: 8, then number of odd digits, then number of even digits.";
+                currentInput = toPrepend + "Function: 8, then number of odd digits, then number of even digits.";
                 wackyString = "" + inputY + inputZ;
                 int oddZ = 0;
                 for (int i = 0; i < wackyString.Length; i++)
@@ -734,7 +924,7 @@ public class qFunctions : MonoBehaviour
                 break;
             case 3: //Digital root of a+b
                 currentInputAsNumber = inputY + inputZ;
-                currentInput = "Function: Digital root of a+b. " + inputY + "+" + inputZ + " is " + currentInputAsNumber + ".";
+                currentInput = toPrepend + "Function: Digital root of a+b. " + inputY + "+" + inputZ + " is " + currentInputAsNumber + ".";
                 while (currentInputAsNumber > 9)
                 {
                     wackyString = "" + currentInputAsNumber;
@@ -749,17 +939,17 @@ public class qFunctions : MonoBehaviour
                 break;
             case 4: //a+b modulo 1000
                 currentInputAsNumber = inputY + inputZ;
-                currentInput = "Function: a+b modulo 1000. " + inputY + "+" + inputZ + " is " + currentInputAsNumber + ".";
+                currentInput = toPrepend + "Function: a+b modulo 1000. " + inputY + "+" + inputZ + " is " + currentInputAsNumber + ".";
                 currentInputAsNumber = currentInputAsNumber % 1000;
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} That modulo 1000 is {4}.", _moduleId, inputY, inputZ, currentInput, currentInputAsNumber);
                 break;
             case 5: // (a+b) squared
                 currentInputAsNumber = (inputY + inputZ) * (inputY + inputZ);
-                currentInput = "Function: (a+b) squared. " + inputY + "+" + inputZ + " squared is " + currentInputAsNumber + ".";
+                currentInput = toPrepend + "Function: (a+b) squared. " + inputY + "+" + inputZ + " squared is " + currentInputAsNumber + ".";
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3}", _moduleId, inputY, inputZ, currentInput);
                 break;
             case 6: //Highest digit
-                currentInput = "Function: Highest digit.";
+                currentInput = toPrepend + "Function: Highest digit.";
                 wackyString = "" + inputY + inputZ;
                 int hiDigit = 0;
                 for (int i = 0; i < wackyString.Length; i++)
@@ -774,7 +964,7 @@ public class qFunctions : MonoBehaviour
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4}.", _moduleId, inputY, inputZ, currentInput, currentInputAsNumber);
                 break;
             case 7: //Number of digits missing
-                currentInput = "Function: Number of digits missing.";
+                currentInput = toPrepend + "Function: Number of digits missing.";
                 wackyString = "" + inputY + inputZ;
                 int digitsOut = 0;
                 bool isDigitFound = false;
@@ -811,12 +1001,12 @@ public class qFunctions : MonoBehaviour
                     largerOne = inputZ;
                     smallerOne = inputY;
                 }
-                currentInput = "Function: (Larger*2)-Smaller. Larger is " + largerOne + ".";
+                currentInput = toPrepend + "Function: (Larger*2)-Smaller. Larger is " + largerOne + ".";
                 currentInputAsNumber = largerOne + largerOne - smallerOne;
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4}.", _moduleId, inputY, inputZ, currentInput, currentInputAsNumber);
                 break;
             case 9: //Sum of times each digit appears in serial number
-                currentInput = "Function: Sum of times each digit appears in serial number, which is " + Bomb.GetSerialNumber() + ".";
+                currentInput = toPrepend + "Function: Sum of times each digit appears in serial number, which is " + Bomb.GetSerialNumber() + ".";
                 wackyString = "" + inputY + inputZ;
                 currentInputAsNumber = 0;
                 for (int j = 0; j < wackyString.Length; j++)
@@ -842,10 +1032,10 @@ public class qFunctions : MonoBehaviour
                     currentInputAsNumber++;
                 }
 
-                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. Function: Number of even numbers, which is {3}.", _moduleId, inputY, inputZ, currentInputAsNumber);
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. " + toPrepend + "Function: Number of even numbers, which is {3}.", _moduleId, inputY, inputZ, currentInputAsNumber);
                 break;
             case 11: //Dots in digits when using morse code
-                currentInput = "Function: Dots found in digits when using morse code.";
+                currentInput = toPrepend + "Function: Dots found in digits when using morse code.";
                 wackyString = "" + inputY + inputZ;
                 currentInputAsNumber = 0;
                 string curMorse = "( ";
@@ -916,7 +1106,7 @@ public class qFunctions : MonoBehaviour
                     curMorse, currentInputAsNumber);
                 break;
             case 12: // a+b, then |a-b|
-                currentInput = "Function: a+b, then absolute value of a-b.";
+                currentInput = toPrepend + "Function: a+b, then absolute value of a-b.";
                 wackyString = "" + (inputY + inputZ) + Math.Abs(inputY - inputZ);
                 currentInputAsNumber = Int64.Parse(wackyString);
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} Sum is {4} and difference is {5}, so the answer is {6}.", _moduleId, inputY, inputZ,
@@ -925,7 +1115,7 @@ public class qFunctions : MonoBehaviour
             case 13: //larger / smaller modulo 1000
                 int largerOneB;
                 int smallerOneB;
-                currentInput = "Function: Integer of (Larger / Smaller) modulo 1000.";
+                currentInput = toPrepend + "Function: Integer of (Larger / Smaller) modulo 1000.";
                 if (inputY > inputZ)
                 {
                     largerOneB = inputY;
@@ -942,7 +1132,7 @@ public class qFunctions : MonoBehaviour
                 break;
             case 14: //Digital root of |a-b|
                 currentInputAsNumber = Math.Abs(inputY - inputZ);
-                currentInput = "Function: Digital root of |a-b|. |" + inputY + "-" + inputZ + "| is " + currentInputAsNumber + ".";
+                currentInput = toPrepend + "Function: Digital root of |a-b|. |" + inputY + "-" + inputZ + "| is " + currentInputAsNumber + ".";
                 while (currentInputAsNumber > 9)
                 {
                     wackyString = "" + currentInputAsNumber;
@@ -957,25 +1147,25 @@ public class qFunctions : MonoBehaviour
                 break;
             case 15: //Lit indicators times 63
                 currentInputAsNumber = 63 * Bomb.GetOnIndicators().Count();
-                currentInput = "Function: Lit indicators times 63. Lit indicator count is " + Bomb.GetOnIndicators().Count() + ", times 63 is " + currentInputAsNumber + ".";
+                currentInput = toPrepend + "Function: Lit indicators times 63. Lit indicator count is " + Bomb.GetOnIndicators().Count() + ", times 63 is " + currentInputAsNumber + ".";
 
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3}", _moduleId, inputY, inputZ, currentInput);
                 break;
             case 16: //a * b
                 currentInputAsNumber = inputY * inputZ;
-                currentInput = "Function: a*b.";
+                currentInput = toPrepend + "Function: a*b.";
 
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4}", _moduleId, inputY, inputZ, currentInput, currentInputAsNumber);
                 break;
             case 17: //(a * b) modulo 1000
                 currentInputAsNumber = inputY * inputZ;
-                currentInput = "Function: (a*b) modulo 1000. " + inputY + "*" + inputZ + " is " + currentInputAsNumber + ".";
+                currentInput = toPrepend + "Function: (a*b) modulo 1000. " + inputY + "*" + inputZ + " is " + currentInputAsNumber + ".";
                 currentInputAsNumber = (inputY * inputZ) % 1000;
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} That product modulo 1000 is {4}", _moduleId, inputY, inputZ,
                     currentInput, currentInputAsNumber);
                 break;
             case 18: //(sum of a's digits) * (sum of b's digits)
-                currentInput = "Function: Sum of a's digits times sum of b's digits.";
+                currentInput = toPrepend + "Function: Sum of a's digits times sum of b's digits.";
                 int sumA = 0;
                 int sumB = 0;
                 for (int i = 0; i < ("" + inputY).Length; i++)
@@ -993,7 +1183,7 @@ public class qFunctions : MonoBehaviour
             case 19: //smaller - (larger modulo smaller)
                 int largerOneC;
                 int smallerOneC;
-                currentInput = "Function: Smaller - (Larger modulo smaller).";
+                currentInput = toPrepend + "Function: Smaller - (Larger modulo smaller).";
                 if (inputY > inputZ)
                 {
                     largerOneC = inputY;
@@ -1010,7 +1200,7 @@ public class qFunctions : MonoBehaviour
                 break;
             case 20: //a*b, odd-position digits removed
                 currentInputAsNumber = (inputY * inputZ);
-                currentInput = "Function: a*b, digits in odd positions removed. " + inputY + "*" + inputZ + " is " + currentInputAsNumber + ".";
+                currentInput = toPrepend + "Function: a*b, digits in odd positions removed. " + inputY + "*" + inputZ + " is " + currentInputAsNumber + ".";
                 wackyString = "";
                 for (int i = 0; i < ("" + currentInputAsNumber).Length; i++)
                 {
@@ -1031,7 +1221,7 @@ public class qFunctions : MonoBehaviour
                 break;
             case 21: //All digits missing from 1 to 0
                 wackyString = "" + inputY + inputZ;
-                currentInput = "Function: All digits missing, from 1 to 0.";
+                currentInput = toPrepend + "Function: All digits missing, from 1 to 0.";
                 string finalString = "";
                 for (int i = 1; i < 11; i++)
                 {
@@ -1069,7 +1259,7 @@ public class qFunctions : MonoBehaviour
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4}.", _moduleId, inputY, inputZ, currentInput, currentInputAsNumber);
                 break;
             case 22: //Lunar Addition
-                currentInput = "Function: Lunar Addition.";
+                currentInput = toPrepend + "Function: Lunar Addition.";
                 wackyString = "";
                 string LAa = "" + inputY;
                 string LAb = "" + inputZ;
@@ -1097,7 +1287,7 @@ public class qFunctions : MonoBehaviour
                 break;
             case 23: //a*b, odd digits removed
                 currentInputAsNumber = (inputY * inputZ);
-                currentInput = "Function: a*b, odd digits removed. " + inputY + "*" + inputZ + " is " + currentInputAsNumber + ".";
+                currentInput = toPrepend + "Function: a*b, odd digits removed. " + inputY + "*" + inputZ + " is " + currentInputAsNumber + ".";
                 wackyString = "";
                 for (int i = 0; i < ("" + currentInputAsNumber).Length; i++)
                 {
@@ -1118,7 +1308,7 @@ public class qFunctions : MonoBehaviour
                 break;
             case 24: //(digit, then 2 for even and 1 for odd) for all digits in order
                 wackyString = "" + inputY + inputZ;
-                currentInput = "Function: Digit, then 2 if even and 1 if odd for all digits in order.";
+                currentInput = toPrepend + "Function: Digit, then 2 if even and 1 if odd for all digits in order.";
                 string digitOrder = "";
                 int[] digit = new int[wackyString.Length];
                 int[] digitCount = new int[10];
@@ -1165,14 +1355,14 @@ public class qFunctions : MonoBehaviour
                 break;
             case 25: // sqrt(a) + sqrt(b)
                 currentInputAsNumber = (int)(Mathf.Sqrt(inputY) + Mathf.Sqrt(inputZ));
-                currentInput = "Function: (Square root of a) + (Square root of b). sqrt(" + inputY + ") + sqrt(" + inputZ + ")" +
+                currentInput = toPrepend + "Function: (Square root of a) + (Square root of b). sqrt(" + inputY + ") + sqrt(" + inputZ + ")" +
                     " is " + (Mathf.Sqrt(inputY) + Mathf.Sqrt(inputZ)) + ".";
 
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is made into the integer {4}.", _moduleId, inputY, inputZ, currentInput, currentInputAsNumber);
                 break;
             case 26: //Digital root of a*b
                 currentInputAsNumber = (inputY * inputZ);
-                currentInput = "Function: Digital root of (a*b). (" + inputY + "*" + inputZ + ") is " + currentInputAsNumber + ".";
+                currentInput = toPrepend + "Function: Digital root of (a*b). (" + inputY + "*" + inputZ + ") is " + currentInputAsNumber + ".";
                 while (currentInputAsNumber > 9)
                 {
                     wackyString = "" + currentInputAsNumber;
@@ -1186,12 +1376,12 @@ public class qFunctions : MonoBehaviour
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} Digital root of that is {4}.", _moduleId, inputY, inputZ, currentInput, currentInputAsNumber);
                 break;
             case 27: //Number of digits * 202
-                currentInput = "Function: Number of digits times 202.";
+                currentInput = toPrepend + "Function: Number of digits times 202.";
                 currentInputAsNumber = ("" + inputY + inputZ).Length * 202;
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4}.", _moduleId, inputY, inputZ, currentInput, currentInputAsNumber);
                 break;
             case 28: //808
-                currentInput = "Function: Just return 808.";
+                currentInput = toPrepend + "Function: Just return 808.";
                 currentInputAsNumber = 808;
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} Okay, here is {4}.", _moduleId, inputY, inputZ, currentInput, currentInputAsNumber);
                 break;
@@ -1206,7 +1396,7 @@ public class qFunctions : MonoBehaviour
                     currentInputAsNumber--;
                 }
 
-                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. Function: 810 - (Number of numbers below 100), which equals {3}.", _moduleId, inputY, inputZ, currentInputAsNumber);
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. " + toPrepend + "Function: 810 - (Number of numbers below 100), which equals {3}.", _moduleId, inputY, inputZ, currentInputAsNumber);
                 break;
             case 30: //larger modulo smaller
                 int largerOneD;
@@ -1226,7 +1416,7 @@ public class qFunctions : MonoBehaviour
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4}.", _moduleId, inputY, inputZ, currentInput, currentInputAsNumber);
                 break;
             case 31: //Sum of letters in each digit
-                currentInput = "Function: Sum of letters in each digit.";
+                currentInput = toPrepend + "Function: Sum of letters in each digit.";
                 wackyString = "" + inputY + inputZ;
                 currentInputAsNumber = 0;
                 for (int i = 0; i < wackyString.Length; i++)
@@ -1247,7 +1437,7 @@ public class qFunctions : MonoBehaviour
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4} letters.", _moduleId, inputY, inputZ, currentInput, currentInputAsNumber);
                 break;
             case 32: //Product of products of first and last digits
-                currentInput = "Function: Product of first and last digits in each number.";
+                currentInput = toPrepend + "Function: Product of first and last digits in each number.";
                 currentInputAsNumber = 1;
                 wackyString = "" + inputY.ToString().Substring(0, 1) + inputY.ToString().Substring(inputY.ToString().Length - 1, 1) +
                                    inputZ.ToString().Substring(0, 1) + inputZ.ToString().Substring(inputZ.ToString().Length - 1, 1);
@@ -1259,12 +1449,12 @@ public class qFunctions : MonoBehaviour
                 break;
             case 33: //Square root of (a+b)
                 currentInputAsNumber = (int)Mathf.Sqrt(inputY + inputZ);
-                currentInput = "Function: Square root of (a+b). " + inputY + " plus " + inputZ + " is " + (inputY + inputZ) + ".";
+                currentInput = toPrepend + "Function: Square root of (a+b). " + inputY + " plus " + inputZ + " is " + (inputY + inputZ) + ".";
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} The square root of that is {4}, made into the integer {5}.", _moduleId, inputY, inputZ,
                     currentInput, Mathf.Sqrt(inputY + inputZ), currentInputAsNumber);
                 break;
             case 34: //Product of first digit of a and last digit of b
-                currentInput = "Function: Product of first and last digit overall.";
+                currentInput = toPrepend + "Function: Product of first and last digit overall.";
                 currentInputAsNumber = 1;
                 wackyString = "" + inputY.ToString().Substring(0, 1) + inputZ.ToString().Substring(inputZ.ToString().Length - 1, 1);
                 for (int i = 0; i < 2; i++)
@@ -1274,24 +1464,24 @@ public class qFunctions : MonoBehaviour
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4}.", _moduleId, inputY, inputZ, currentInput, currentInputAsNumber);
                 break;
             case 35: //a squared plus b squared
-                currentInput = "Function: (a^2) + (b^2).";
+                currentInput = toPrepend + "Function: (a^2) + (b^2).";
                 currentInputAsNumber = (inputY * inputY) + (inputZ * inputZ);
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4}.", _moduleId, inputY, inputZ, currentInput, currentInputAsNumber);
                 break;
             case 36: //(a+b) modulo 12
-                currentInput = "Function: (a+b) modulo 12.";
+                currentInput = toPrepend + "Function: (a+b) modulo 12.";
                 currentInputAsNumber = (inputY + inputZ) % 12;
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} The sum is {4}, that modulo 12 is {5}.", _moduleId, inputY, inputZ, currentInput,
                     (inputZ + inputY), currentInputAsNumber);
                 break;
             case 37: //Absolute value of a-b
-                currentInput = "Function: Absolute value of (a-b)";
+                currentInput = toPrepend + "Function: Absolute value of (a-b)";
                 currentInputAsNumber = Math.Abs(inputY - inputZ);
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4}.", _moduleId, inputY, inputZ, currentInput, currentInputAsNumber);
                 break;
             case 38: //(digit then number of that digit) for all digits in order
                 wackyString = "" + inputY + inputZ;
-                currentInput = "Function: Digit, then number of times that digit appears for all digits in order.";
+                currentInput = toPrepend + "Function: Digit, then number of times that digit appears for all digits in order.";
                 string digitOrderB = "";
                 int[] digitB = new int[wackyString.Length];
                 int[] digitCountB = new int[10];
@@ -1330,14 +1520,14 @@ public class qFunctions : MonoBehaviour
 
                 break;
             case 39: //a+b
-                currentInput = "Function: a plus b.";
+                currentInput = toPrepend + "Function: a plus b.";
                 currentInputAsNumber = inputY + inputZ;
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4}.", _moduleId, inputY, inputZ, currentInput, currentInputAsNumber);
                 break;
             case 40: // (Larger/Smaller)
                 int largerOneE;
                 int smallerOneE;
-                currentInput = "Function: Larger divided by smaller.";
+                currentInput = toPrepend + "Function: Larger divided by smaller.";
                 if (inputY > inputZ)
                 {
                     largerOneE = inputY;
@@ -1355,7 +1545,7 @@ public class qFunctions : MonoBehaviour
             case 41: //(a+b) * (Larger / Smaller)
                 int largerOneF;
                 int smallerOneF;
-                currentInput = "Function: (a+b) times (Larger divided by smaller).";
+                currentInput = toPrepend + "Function: (a+b) times (Larger divided by smaller).";
                 if (inputY > inputZ)
                 {
                     largerOneF = inputY;
@@ -1367,9 +1557,234 @@ public class qFunctions : MonoBehaviour
                     smallerOneF = inputY;
                 }
                 currentInputAsNumber = (int)((inputY + inputZ) * ((float)largerOneF / (float)smallerOneF));
-                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4} times {5}, or {6}, the integer of which is {7}.", _moduleId, inputY, inputZ, currentInput,
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {5} times {4}, or {6}, the integer of which is {7}.", _moduleId, inputY, inputZ, currentInput,
                     ((float)largerOneF / (float)smallerOneF), (inputY + inputZ),
                     ((float)largerOneF / (float)smallerOneF) * ((inputY + inputZ)), currentInputAsNumber);
+                break;
+            case 42: //(a times 10) + b
+                currentInput = toPrepend + "Function: (a times 10) + b.";
+                currentInputAsNumber = (inputY * 10) + inputZ;
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4}.", _moduleId, inputY, inputZ, currentInput, currentInputAsNumber);
+                break;
+            case 43: //Dashes in digits when using morse code
+                currentInput = toPrepend + "Function: Dots found in digits when using morse code.";
+                wackyString = "" + inputY + inputZ;
+                currentInputAsNumber = 0;
+                string curMorse2 = "( ";
+                for (int i = 0; i < wackyString.Length; i++)
+                {
+                    if (wackyString.Substring(i, 1) == "1")
+                    {
+                        currentInputAsNumber += 4;
+                        curMorse2 = curMorse2 + ".----";
+                    }
+                    else if (wackyString.Substring(i, 1) == "2")
+                    {
+                        currentInputAsNumber +=3;
+                        curMorse2 = curMorse2 + "..---";
+                    }
+                    else if (wackyString.Substring(i, 1) == "3")
+                    {
+                        currentInputAsNumber += 2;
+                        curMorse2 = curMorse2 + "...--";
+                    }
+                    else if (wackyString.Substring(i, 1) == "4")
+                    {
+                        currentInputAsNumber += 1;
+                        curMorse2 = curMorse2 + "....-";
+
+                    }
+                    else if (wackyString.Substring(i, 1) == "5")
+                    {
+                        currentInputAsNumber += 0;
+                        curMorse2 = curMorse2 + ".....";
+
+                    }
+                    else if (wackyString.Substring(i, 1) == "6")
+                    {
+                        currentInputAsNumber += 1;
+                        curMorse2 = curMorse2 + "-....";
+                    }
+                    else if (wackyString.Substring(i, 1) == "7")
+                    {
+                        currentInputAsNumber += 2;
+                        curMorse2 = curMorse2 + "--...";
+                    }
+                    else if (wackyString.Substring(i, 1) == "8")
+                    {
+                        currentInputAsNumber += 3;
+                        curMorse2 = curMorse2 + "---..";
+                    }
+                    else if (wackyString.Substring(i, 1) == "9")
+                    {
+                        currentInputAsNumber += 4;
+                        curMorse2 = curMorse2 + "----.";
+                    }
+                    else if (wackyString.Substring(i, 1) == "0")
+                    {
+                        currentInputAsNumber += 5;
+                        curMorse2 = curMorse2 + "-----";
+                    }
+                    if (i == wackyString.Length - 1)
+                    {
+                        curMorse2 = curMorse2 + " ).";
+                    }
+                    else
+                    {
+                        curMorse2 = curMorse2 + " | ";
+                    }
+                }
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} Digits in morse were {4}, which is {5} dots.", _moduleId, inputY, inputZ, currentInput,
+                    curMorse2, currentInputAsNumber);
+                break;
+            case 44: //a concatenated with b, even-position digits removed
+                currentInput = toPrepend + "Function: a concatenated with b, even-position digits removed.";
+                wackyString = inputY + "" + inputZ;
+                var curConcatString = "";
+                for (int i = 0; i < wackyString.Length; i++)
+                {
+                    if (i % 2 == 0)
+                    {
+                        curConcatString = curConcatString + wackyString.Substring(i, 1);
+                    }
+                }
+                currentInputAsNumber = Int16.Parse(curConcatString);
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4}, which with even-position digits removed is {5}.", _moduleId, inputY, inputZ, 
+                    currentInput, wackyString, currentInputAsNumber);
+                break;
+            case 45: //a + b + number of digits in bomb serial number
+                currentInput = toPrepend + "Function: Sum of digits in bomb serial number.";
+                currentInputAsNumber = 0;
+                for (int i = 0; i < 6; i++)
+                {
+                    if (Bomb.GetSerialNumber().Substring(i, 1) == "1" || Bomb.GetSerialNumber().Substring(i, 1) == "2" ||
+                Bomb.GetSerialNumber().Substring(i, 1) == "3" || Bomb.GetSerialNumber().Substring(i, 1) == "4" ||
+                Bomb.GetSerialNumber().Substring(i, 1) == "5" || Bomb.GetSerialNumber().Substring(i, 1) == "6" ||
+                Bomb.GetSerialNumber().Substring(i, 1) == "7" || Bomb.GetSerialNumber().Substring(i, 1) == "8" ||
+                Bomb.GetSerialNumber().Substring(i, 1) == "9" || Bomb.GetSerialNumber().Substring(i, 1) == "0")
+                    {
+                        currentInputAsNumber += Int16.Parse(Bomb.GetSerialNumber().Substring(i, 1));
+                    }
+                }
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} The SN is {4}, so the final total is {5}.", _moduleId, inputY, inputZ,
+                  currentInput, Bomb.GetSerialNumber(), currentInputAsNumber);
+                break;
+            case 46: //a^2 * b^2
+                currentInput = toPrepend + "Function: (a squared) times (b squared).";
+                long superNumber = (long)(inputY * inputY) * (long)(inputZ * inputZ);
+                wackyString = superNumber + "";
+                if (wackyString.Length > 12)
+                {
+                    currentInput = currentInput + " Leftmost 12 digits used.";
+                    wackyString = wackyString.Substring(0, 12);
+                }
+                currentInputAsNumber = Int64.Parse(wackyString);
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} a squared times b squared is {4}, so the final answer is {5}.", _moduleId, inputY, inputZ,
+                     currentInput, superNumber, currentInputAsNumber);
+                break;
+            case 47: //|(a squared) - (b squared)|
+                currentInput = toPrepend + "Function: | (a squared) minus (b squared) |.";
+                currentInputAsNumber = Math.Abs((inputY * inputY) - (inputZ * inputZ));
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} The final answer is {4}.", _moduleId, inputY, inputZ,
+                     currentInput, currentInputAsNumber);
+                break;
+            case 48: //(a squared) + b
+                currentInput = toPrepend + "Function: (a squared) + b.";
+                currentInputAsNumber = (inputY * inputY) + (inputZ);
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} The final answer is {4}.", _moduleId, inputY, inputZ,
+                     currentInput, currentInputAsNumber);
+                break;
+            case 49: //a + (b squared)
+                currentInput = toPrepend + "Function: a + (b squared).";
+                currentInputAsNumber = (inputZ * inputZ) + (inputY);
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} The final answer is {4}.", _moduleId, inputY, inputZ,
+                     currentInput, currentInputAsNumber);
+                break;
+            case 50: //(a times b) module 73
+                currentInput = toPrepend + "Function: (a times b) module 73.";
+                currentInputAsNumber = (inputY * inputZ) % 73;
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} The product is {4}, that modulo 73 is {5}.", _moduleId, inputY, inputZ,
+                     currentInput, (inputY * inputZ), currentInputAsNumber);
+                break;
+            case 51: //(a modulo 50) + b"
+                currentInput = toPrepend + "Function: (a modulo 50) + b.";
+                currentInputAsNumber = (inputY % 50) + inputZ;
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} a modulo 50 is {4}, plus {5} is {6}.", _moduleId, inputY, inputZ,
+                     currentInput, (inputY % 50), inputZ, currentInputAsNumber);
+                break;
+            case 52: //((a modulo 4) + 2) to the power of ((b modulo 4) + 2)
+                currentInput = toPrepend + "Function: ((a modulo 4) + 2) to the power of ((b modulo 4) + 2).";
+                currentInputAsNumber = 1;
+                for (int i = 1; i <= ((inputZ % 4) + 2); i++)
+                {
+                    currentInputAsNumber = currentInputAsNumber * ((inputY % 4) + 2);
+                }
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} ({7} modulo 4) + 2) is {4} and ({8} modulo 4) + 2) is {5}, so the final total is {6}.", _moduleId, inputY, inputZ,
+                currentInput, ((inputY % 4) + 2), ((inputZ % 4) + 2), currentInputAsNumber, inputY, inputZ);
+                break;
+            case 53: // 808 modulo (a + b)
+                currentInput = toPrepend + "Function: 808 modulo (a + b).";
+                currentInputAsNumber = 808 % (inputY + inputZ);
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4}.", _moduleId, inputY, inputZ,
+                    currentInput, currentInputAsNumber);
+                break;
+            case 54: // |a minus b| modulo 1000
+                currentInput = toPrepend + "Function: |a minus b| modulo 1000.";
+                currentInputAsNumber = Math.Abs(inputY - inputZ) % 1000;
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4}.", _moduleId, inputY, inputZ,
+                    currentInput, currentInputAsNumber);
+                break;
+            case 55: //(a + b) times (a minus b)
+                currentInput = toPrepend + "Function: (a + b) times |a minus b|.";
+                currentInputAsNumber = Math.Abs(inputY - inputZ) * (inputY + inputZ);
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4} times {5}, or {6}.", _moduleId, inputY, inputZ,
+                    currentInput, (inputY + inputZ), Math.Abs(inputY - inputZ), currentInputAsNumber);
+                break;
+            case 56: //(a + b) times Larger
+                currentInput = toPrepend + "Function: (a + b) times Larger.";
+                currentInputAsNumber = inputY + inputZ;
+                var theLargest = 0;
+                if (inputY > inputZ)
+                {
+                    currentInputAsNumber = currentInputAsNumber * inputY;
+                    theLargest = inputY;
+                }
+                else
+                {
+                    currentInputAsNumber = currentInputAsNumber + inputZ;
+                    theLargest = inputZ;
+                }
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4} times {5}, or {6}.", _moduleId, inputY, inputZ,
+                    currentInput, (inputY + inputZ), theLargest, currentInputAsNumber);
+                break;
+            case 57: //(a + b) times Smaller
+                currentInput = toPrepend + "Function: (a + b) times Larger.";
+                currentInputAsNumber = inputY + inputZ;
+                var theSmallest = 0;
+                if (inputY > inputZ)
+                {
+                    currentInputAsNumber = currentInputAsNumber * inputZ;
+                    theSmallest = inputZ;
+                }
+                else
+                {
+                    currentInputAsNumber = currentInputAsNumber + inputY;
+                    theSmallest = inputY;
+                }
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4} times {5}, or {6}.", _moduleId, inputY, inputZ,
+                    currentInput, (inputY + inputZ), theSmallest, currentInputAsNumber);
+                break;
+            case 58: //(a + b) * b
+                currentInput = toPrepend + "Function: (a + b) times b.";
+                currentInputAsNumber = (inputY + inputZ) * inputZ;
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4}.", _moduleId, inputY, inputZ,
+                    currentInput, currentInputAsNumber);
+                break;
+            case 59: //(a + b) * a
+                currentInput = toPrepend + "Function: (a + b) times b.";
+                currentInputAsNumber = (inputY + inputZ) * inputY;
+                Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} This is {4}.", _moduleId, inputY, inputZ,
+                    currentInput, currentInputAsNumber);
                 break;
             default: // Uh oh, something's wrong, solve module and tell them to contact me
                 isSolved = true;
@@ -1381,5 +1796,8 @@ public class qFunctions : MonoBehaviour
                 Debug.LogFormat("[Functions #{0}] Something went wrong, please contact JerryEris#6034 on Discord!", _moduleId);
                 break;
         }
+        /*  
+        "|a minus b| modulo 1000", "(a + b) times (a minus b)",, "(a + b) times Larger", "(a + b) * b", "(a + b) * a"
+        */
     }
 }
