@@ -55,7 +55,7 @@ public class qFunctions : MonoBehaviour
      "(a + b) times (Larger divided by Smaller)",
      // RULESEED FUNCTIONS BELOW
         "(a times 10) + b", "Dashes found in digits when using morse code", "a concatenated with b, even-position digits removed", "Sum of digits in bomb serial number",
-        "(a squared) * (b squared)", "| (a squared) minus (b squared) |", "(a squared) + b", "a + (b squared)", "(a times b) modulo 73", "(a modulo 50) + b",
+        "(a squared) * (b squared)", "| (a squared) minus ( (b + 1) squared) |", "(a squared) + b", "a + (b squared)", "(a times b) modulo 73", "(a modulo 50) + b",
         "((a modulo 4) + 2) to the power of ((b modulo 4) + 2)", "808 modulo (a + b)", "|a minus b| modulo 1000", "(a + b) times (a minus b)", "(a + b) times Larger", "(a + b) times Smaller",
         "(a + b) * b", "(a + b) * a"
 
@@ -108,6 +108,7 @@ public class qFunctions : MonoBehaviour
     int letterRuleOn = -1; // 0 is true, 1 is false, because I said so this time
 
     string currentInput = "";
+    string ruleLetter = "";
     long currentInputAsNumber;
     long moduleSolution;
 
@@ -116,6 +117,7 @@ public class qFunctions : MonoBehaviour
     bool commaIn = false;
     bool justQueried = false;
     bool isSolved = false;
+    bool snHasDigit = false;
     
     void Start()
     {
@@ -134,7 +136,18 @@ public class qFunctions : MonoBehaviour
 
     int[,] rsRuleOffset = new int[26, 2];
     */
-
+        for (int i = 0; i < 6; i++)
+        {
+            if (Bomb.GetSerialNumber().Substring(i, 1) == "1" || Bomb.GetSerialNumber().Substring(i, 1) == "2" ||
+        Bomb.GetSerialNumber().Substring(i, 1) == "3" || Bomb.GetSerialNumber().Substring(i, 1) == "4" ||
+        Bomb.GetSerialNumber().Substring(i, 1) == "5" || Bomb.GetSerialNumber().Substring(i, 1) == "6" ||
+        Bomb.GetSerialNumber().Substring(i, 1) == "7" || Bomb.GetSerialNumber().Substring(i, 1) == "8" ||
+        Bomb.GetSerialNumber().Substring(i, 1) == "9" || Bomb.GetSerialNumber().Substring(i, 1) == "0")
+            {
+                snHasDigit = true;
+                i = 6;
+            }
+        }
         
         for (int i = 0; i < 42; i++)
             {
@@ -188,7 +201,15 @@ public class qFunctions : MonoBehaviour
         delegationZone();
         Module.OnActivate += delegate { inputResult.GetComponentInChildren<TextMesh>().text = ""; };
         pickedLetter = UnityEngine.Random.Range(0, 26);
+        ruleLetter = alphabet[pickedLetter];
         pickedFunction = UnityEngine.Random.Range(0, 42);
+        if (!snHasDigit) //If the SN doesn't contain a digit, two Query Functions could potentially have the same answer regardless of what is queried, which is a problem.
+        {                //This shouldn't be a problem as I don't believe any mods allow for digitless SN's but who knows in the future.
+            while (rsFunctionNum[pickedFunction] == 9 || rsFunctionNum[pickedFunction] == 15)
+            {
+                pickedFunction = UnityEngine.Random.Range(0, 42);
+            }
+        }
         //pickedFunction = 26;
         if (UnityEngine.Random.Range(0, 10) < 7)
         {
@@ -344,6 +365,12 @@ public class qFunctions : MonoBehaviour
                 var winMessage = new string[10] { "BOOYAH!", "--DISARMED--", "YES! YES!", "NAILED IT!", "WOO!", "CHA-CHING!", "GOT IT!", "GENIUS!", "WELL DONE!", "YOU DID IT!" };
                 isSolved = true;
                 inputResult.GetComponentInChildren<TextMesh>().text = winMessage[UnityEngine.Random.Range(0, 10)];
+                if (Bomb.GetSolvableModuleNames().Where(x => "Souvenir".Contains(x)).Count() > 0)
+                {
+                    meshNumberA.GetComponentInChildren<TextMesh>().text = "???";
+                    meshNumberB.GetComponentInChildren<TextMesh>().text = "???";
+                    functLetter.GetComponentInChildren<TextMesh>().text = "!";
+                }
                 pressedAllowed = false;
                 GetComponent<KMBombModule>().HandlePass();
             }
@@ -872,7 +899,7 @@ public class qFunctions : MonoBehaviour
             toPrepend = "Query ";
         }
         var wackyString = "";
-        //fNum = 52;
+        //fNum = 47;
         switch (fNum)
         {
             case 0: // Digital root of ((a+b) squared)
@@ -1682,9 +1709,9 @@ public class qFunctions : MonoBehaviour
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} a squared times b squared is {4}, so the final answer is {5}.", _moduleId, inputY, inputZ,
                      currentInput, superNumber, currentInputAsNumber);
                 break;
-            case 47: //|(a squared) - (b squared)|
-                currentInput = toPrepend + "Function: | (a squared) minus (b squared) |.";
-                currentInputAsNumber = Math.Abs((inputY * inputY) - (inputZ * inputZ));
+            case 47: //|(a squared) - (b+1 squared)|
+                currentInput = toPrepend + "Function: | (a squared) minus ( (b + 1) squared) |.";
+                currentInputAsNumber = Math.Abs((inputY * inputY) - ( (1 + inputZ) * (1 + inputZ) ));
                 Debug.LogFormat("[Functions #{0}] Variables are {1}, {2}. {3} The final answer is {4}.", _moduleId, inputY, inputZ,
                      currentInput, currentInputAsNumber);
                 break;
