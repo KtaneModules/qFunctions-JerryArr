@@ -13,8 +13,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   id: qFunctions
   title: Functions
-  description: "Functions 1.15\nHow in the heck do you get 8 from 1 and 3\u203D\n\nModule
+  description: "Functions 1.17\nHow in the heck do you get 8 from 1 and 3\u203D\n\nModule
     ID: qFunctions\n\nCreated by: JerryEris\n\nManual available here: https://ktane.timwi.de/HTML/Functions.html"
-  version: 1.15
+  version: 1.17
   outputFolder: build
   previewImage: {fileID: 2800000, guid: 7fd0eee46bbe34b4ebb207b6498b6b12, type: 3}

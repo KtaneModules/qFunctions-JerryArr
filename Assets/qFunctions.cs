@@ -400,14 +400,36 @@ public class qFunctions : MonoBehaviour
     }
 
 #pragma warning disable 414
-    private readonly string TwitchHelpMessage = @"Perform a query (which will first clear the top and middle screens) with !{0} (query/q) 9876, 5432. You can omit the comma. Submit an answer with !{0} (submit/s/answer/a) 1234567890.";
+    private readonly string TwitchHelpMessage = @"Perform a query (which will first clear the top and middle screens) with !{0} (query/q) 9876, 5432. You can omit the comma. Submit an answer with !{0} (submit/s/answer/a) 1234567890. Use !{0} surprise/random for a random query!";
     private readonly bool TwitchShouldCancelCommand = false;
 #pragma warning restore 414
 
     private IEnumerator ProcessTwitchCommand(string command)
     {
+        var twitchString = command;
+        //"q 123, 456" raw q 123| 456 || p q|123,|456
+        //"q 123,456"  raw q 123|456  || p q|123,456
+        // 012345678
+        //0, 5 and 6, 3
+        // 123456789
+        //
+        for (int cN = 0; cN < command.Length - 1; cN++)
+        {
+            //Debug.Log(cN + " is " + command.Substring(cN, 1));
+            
+            if (command.Substring(cN, 1) == ",")
+            {
+                //Debug.Log(command.Substring(0, cN));
+                //Debug.Log(command.Substring(cN + 1, command.Length - (cN + 1)));
 
-        var pieces = command.ToLowerInvariant().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
+                twitchString = command.Substring(0, cN) + " " + command.Substring(cN + 1, command.Length - (cN + 1));
+                //Debug.Log("Add a space");
+
+                cN = command.Length;
+            }
+        }
+        //Debug.Log("Twitch = " + twitchString);
+        var pieces = twitchString.ToLowerInvariant().Split(new[] { ' ' }, StringSplitOptions.RemoveEmptyEntries);
         string theError;
         theError = "";
         yield return null;
@@ -470,8 +492,6 @@ public class qFunctions : MonoBehaviour
             yield return new WaitForSeconds(.1f);
             yield return null;
             buttonQuery.OnInteract();
-            theError = "sendtochat You just got SURPRISED!";
-            yield return theError;
 
         }
         else if ((pieces.Count() == 1 || pieces.Count() == 2) && (pieces[0] == "query" || pieces[0] == "q"))
@@ -543,7 +563,10 @@ public class qFunctions : MonoBehaviour
                         else
                         {
                             theError = "sendtochaterror Invalid character! " + pieces[j].Substring(k,1) + " is not a digit.";
+                           
                         }
+                        j = 3;
+                        k = pieces[j].Length;
                         yield return theError;
                     }
                 }
