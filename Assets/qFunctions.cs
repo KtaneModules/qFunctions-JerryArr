@@ -50,7 +50,7 @@ public class qFunctions : MonoBehaviour
      "a times b, odd-position digits removed", "All digits missing concatenated from 1 to 0", "Lunar Addition", "a times b, odd digits removed",
      "(Digit concatenated with 2 if even and 1 if odd) for all digits in order", "sqrt(a) + sqrt(b)", "Digital root of (a times b)", "Digits in a and b times 202",
      "808", "810 minus (Number of numbers below 100)", "Larger modulo Smaller", "Sum of letters in each digit",
-     "(Product of first and last digit of a) times (Product of first and last digit of b)", "sqrt(a + b)", "Product of first and last digits overall", "(a squared) + (b squared)",
+     "(Product of first and last digit of a) times (Product of first and last digit of b)", "floor(sqrt(a + b))", "Product of first and last digits overall", "(a squared) + (b squared)",
      "(a + b) modulo 12", "|a minus b|", "(Digit concatenated with the number of times that digit appears) for all digits in order", "a + b", "Larger divided by Smaller",
      "(a + b) times (Larger divided by Smaller)",
      // RULESEED FUNCTIONS BELOW
@@ -362,11 +362,20 @@ public class qFunctions : MonoBehaviour
             if (Int64.Parse(currentInput) == moduleSolution)
             {
                 Debug.LogFormat("[Functions #{0}] Submitted input of {1} and the expected {2} match, module disarmed!", _moduleId, Int64.Parse(currentInput), moduleSolution);
-                var winMessage = new string[10] { "BOOYAH!", "--DISARMED--", "YES! YES!", "NAILED IT!", "WOO!", "CHA-CHING!", "GOT IT!", "GENIUS!", "WELL DONE!", "YOU DID IT!" };
+                var winMessage = new string[18] { "BOOYAH!", "--DISARMED--", "YES! YES!", "NAILED IT!", "WOO!", "CHA-CHING!", "GOT IT!", "GENIUS!", "WELL DONE!", "YOU DID IT!",
+					"  WAHOO!  ", "  SCORE  ", "COOL BEANS!", "SOLVE PHRASE", "GOOD ONE", "LED = GREEN", "SOLVES++;", "^^vv< >< >BA"};
                 isSolved = true;
-                inputResult.GetComponentInChildren<TextMesh>().text = winMessage[UnityEngine.Random.Range(0, 10)];
+                inputResult.GetComponentInChildren<TextMesh>().text = winMessage[UnityEngine.Random.Range(0, 18)];
+				if (UnityEngine.Random.Range(0, 400) == 0)
+				{
+					inputResult.GetComponentInChildren<TextMesh>().text = "OH NO I'M OFF THE DISPLAY HELP                ";
+				}
                 if (Bomb.GetSolvableModuleNames().Where(x => "Souvenir".Contains(x)).Count() > 0)
                 {
+					if (UnityEngine.Random.Range(0, 25) == 0)
+					{
+						inputResult.GetComponentInChildren<TextMesh>().text = "DON'T FORGET";
+					}
                     meshNumberA.GetComponentInChildren<TextMesh>().text = "???";
                     meshNumberB.GetComponentInChildren<TextMesh>().text = "???";
                     functLetter.GetComponentInChildren<TextMesh>().text = "!";
